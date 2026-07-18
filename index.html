@@ -1,0 +1,304 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PR-Bench: Perception-Reasoning Benchmark for Referring Expression Comprehension</title>
+    <meta name="description" content="PR-Bench evaluates visual-cue perception and compositional reasoning in referring expression comprehension.">
+    <link rel="stylesheet" href="./assets/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="venue-badge">
+                <span class="venue-tag">ACM MM 2026</span>
+            </div>
+
+            <h1 class="title">PR-Bench</h1>
+            <h2 class="subtitle">Perception-Reasoning Benchmark for Referring Expression Comprehension</h2>
+
+            <div class="authors">
+                <p>
+                    Tianyi Gao<sup>1,2,&dagger;</sup>, Han Fang<sup>2,&dagger;</sup>, Tianyi Ding<sup>2,4</sup>, Hao Li<sup>2,5</sup>, Xin Wei<sup>2</sup>, Hongbo Sun<sup>2</sup>, Xiaodong Dong<sup>2</sup>, Ye Yuan<sup>2</sup>, Jinglin Xu<sup>3</sup>, Kongming Liang<sup>4</sup>, Hao Sun<sup>2,*</sup>, Jingmin Xin<sup>1,*</sup>
+                </p>
+            </div>
+
+            <div class="affiliations">
+                <p>
+                    <sup>1</sup>State Key Laboratory of Human-Machine Hybrid Augmented Intelligence, Institute of Artificial Intelligence and Robotics, Xi'an Jiaotong University<br>
+                    <sup>2</sup>Xingchen AGI Lab, China Telecom Artificial Intelligence Technology (Beijing) Co., Ltd<br>
+                    <sup>3</sup>University of Science and Technology Beijing &nbsp;&nbsp; <sup>4</sup>Beijing University of Posts and Telecommunications &nbsp;&nbsp; <sup>5</sup>Shanghai Jiao Tong University
+                </p>
+                <p class="footnote"><sup>&dagger;</sup>Equal contributions. &nbsp;&nbsp; <sup>*</sup>Corresponding authors.</p>
+            </div>
+            <div class="links">
+                <a href="#leaderboard" class="button">Leaderboard</a>
+                <a href="#benchmark-design" class="button">Benchmark Design</a>
+                <a href="#construction" class="button">Construction Pipeline</a>
+                <a href="#citation" class="button">Citation</a>
+            </div>
+            <div class="hero-grid">
+                <article><strong>6,000</strong><span>query-box pairs</span></article>
+                <article><strong>3,102</strong><span>source images</span></article>
+                <article><strong>6</strong><span>mutually exclusive subcategories</span></article>
+            </div>
+        </div>
+    </header>
+
+    <!-- Leaderboard -->
+    <section class="section leaderboard-section" id="leaderboard">
+        <div class="container">
+            <h2 class="section-title">Leaderboard</h2>
+            <div class="leaderboard-intro">
+                <p>
+                    <strong>PR-Bench</strong> evaluates referring expression comprehension across six diagnostic subcategories. <strong>mAcc</strong> is averaged over five non-rejection categories, <strong>mAcc<sub>API</sub></strong> covers Attribute, Position, and Interaction, and <strong>mAcc<sub>RC</sub></strong> covers Relation and Commonsense. Rejection is reported separately as no-target accuracy.
+                </p>
+            </div>
+
+            <div class="leaderboard-tabs">
+                <button class="tab-button active" onclick="showLeaderboard('opensource')">Open-Source Models</button>
+                <button class="tab-button" onclick="showLeaderboard('commercial')">Commercial Models</button>
+            </div>
+
+            <!-- Open-Source Models Leaderboard -->
+            <div id="opensource-leaderboard" class="leaderboard-content active">
+                <div class="table-wrapper">
+                    <div class="leaderboard-table-container">
+                        <table class="leaderboard-table prbench-table">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Model</th>
+                                    <th>Group</th>
+                                    <th>Size</th>
+                                    <th>mAcc</th>
+                                    <th>mAcc<sub>API</sub></th>
+                                    <th>mAcc<sub>RC</sub></th>
+                                    <th>Attr.</th>
+                                    <th>Pos.</th>
+                                    <th>Inter.</th>
+                                    <th>Rel.</th>
+                                    <th>Common.</th>
+                                    <th>Rej.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="rank-1"><td><span class="rank-icon rank-gold">1</span></td><td><strong>Motto (Qwen3-VL)</strong></td><td>Specialist</td><td>2B</td><td><strong>71.7</strong></td><td>74.4</td><td>67.6</td><td>75.8</td><td>74.5</td><td>72.9</td><td>66.3</td><td>68.9</td><td>46.9</td></tr>
+                                <tr class="rank-2"><td><span class="rank-icon rank-silver">2</span></td><td><strong>Qwen3.5</strong></td><td>Generalist</td><td>27B</td><td><strong>65.3</strong></td><td>67.6</td><td>61.9</td><td>68.4</td><td>67.3</td><td>67.0</td><td>62.7</td><td>61.0</td><td>--</td></tr>
+                                <tr class="rank-3"><td><span class="rank-icon rank-bronze">3</span></td><td><strong>Qwen3.5</strong></td><td>Generalist</td><td>9B</td><td><strong>63.7</strong></td><td>66.3</td><td>59.7</td><td>68.9</td><td>66.9</td><td>63.1</td><td>59.4</td><td>60.0</td><td>11.9</td></tr>
+                                <tr><td>4</td><td>Qwen3-VL</td><td>Generalist</td><td>8B</td><td>59.4</td><td>62.0</td><td>55.6</td><td>64.8</td><td>62.6</td><td>58.7</td><td>55.8</td><td>55.4</td><td>16.2</td></tr>
+                                <tr><td>5</td><td>GLM-4.1V-Thinking</td><td>Generalist</td><td>9B</td><td>57.9</td><td>61.2</td><td>52.9</td><td>63.6</td><td>61.5</td><td>58.6</td><td>52.4</td><td>53.4</td><td>--</td></tr>
+                                <tr><td>6</td><td>VLM-R1</td><td>Specialist</td><td>3B</td><td>54.4</td><td>57.0</td><td>50.5</td><td>59.0</td><td>58.0</td><td>54.1</td><td>47.8</td><td>53.2</td><td>--</td></tr>
+                                <tr><td>7</td><td>VLM-FO1</td><td>Specialist</td><td>3B</td><td>53.9</td><td>57.3</td><td>48.8</td><td>57.9</td><td>56.8</td><td>57.2</td><td>49.6</td><td>47.9</td><td>11.4</td></tr>
+                                <tr><td>8</td><td>Rex-Omni</td><td>Specialist</td><td>3B</td><td>53.7</td><td>58.8</td><td>46.0</td><td>59.5</td><td>58.0</td><td>58.9</td><td>46.8</td><td>45.1</td><td>--</td></tr>
+                                <tr><td>9</td><td>Youtu-VL</td><td>Generalist</td><td>4B</td><td>53.2</td><td>56.7</td><td>47.9</td><td>61.5</td><td>57.2</td><td>51.4</td><td>49.2</td><td>46.6</td><td>--</td></tr>
+                                <tr><td>10</td><td>Qwen3-VL</td><td>Generalist</td><td>2B</td><td>52.8</td><td>55.7</td><td>48.2</td><td>59.5</td><td>58.0</td><td>50.0</td><td>46.7</td><td>49.6</td><td>--</td></tr>
+                                <tr><td>11</td><td>Migician</td><td>Specialist</td><td>7B</td><td>52.3</td><td>56.6</td><td>45.8</td><td>57.3</td><td>59.7</td><td>52.8</td><td>45.4</td><td>46.1</td><td>--</td></tr>
+                                <tr><td>12</td><td>ChatRex</td><td>Specialist</td><td>7B</td><td>49.5</td><td>53.0</td><td>44.3</td><td>54.7</td><td>51.1</td><td>53.2</td><td>45.1</td><td>43.4</td><td>--</td></tr>
+                                <tr><td>13</td><td>InternVL3.5</td><td>Generalist</td><td>38B</td><td>48.5</td><td>51.7</td><td>43.7</td><td>52.0</td><td>50.8</td><td>52.3</td><td>43.9</td><td>43.4</td><td>12.7</td></tr>
+                                <tr><td>14</td><td>DeepEyes</td><td>Specialist</td><td>7B</td><td>45.7</td><td>47.3</td><td>43.1</td><td>49.7</td><td>46.3</td><td>46.0</td><td>42.6</td><td>43.6</td><td>--</td></tr>
+                                <tr><td>15</td><td>InternVL3.5</td><td>Generalist</td><td>8B</td><td>41.5</td><td>44.1</td><td>37.6</td><td>45.7</td><td>41.2</td><td>45.3</td><td>37.8</td><td>37.3</td><td>--</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Commercial Models Leaderboard -->
+            <div id="commercial-leaderboard" class="leaderboard-content">
+                <div class="table-wrapper">
+                    <div class="leaderboard-table-container">
+                        <table class="leaderboard-table prbench-table">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Model</th>
+                                    <th>Size</th>
+                                    <th>mAcc</th>
+                                    <th>mAcc<sub>API</sub></th>
+                                    <th>mAcc<sub>RC</sub></th>
+                                    <th>Attr.</th>
+                                    <th>Pos.</th>
+                                    <th>Inter.</th>
+                                    <th>Rel.</th>
+                                    <th>Common.</th>
+                                    <th>Rej.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="rank-1"><td><span class="rank-icon rank-gold">1</span></td><td><strong>GPT-5</strong></td><td>--</td><td><strong>26.1</strong></td><td>27.2</td><td>24.6</td><td>29.2</td><td>25.5</td><td>27.0</td><td>26.2</td><td>22.9</td><td>--</td></tr>
+                                <tr class="rank-2"><td><span class="rank-icon rank-silver">2</span></td><td><strong>Gemini-2.5-Pro</strong></td><td>--</td><td><strong>25.9</strong></td><td>28.4</td><td>22.3</td><td>29.1</td><td>27.8</td><td>28.2</td><td>25.6</td><td>18.9</td><td>--</td></tr>
+                                <tr class="rank-3"><td><span class="rank-icon rank-bronze">3</span></td><td><strong>GPT-4o</strong></td><td>--</td><td><strong>12.1</strong></td><td>12.1</td><td>12.0</td><td>11.7</td><td>12.8</td><td>11.9</td><td>12.4</td><td>11.6</td><td>--</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <p class="caption" style="margin-top: 20px; text-align: center;">
+                Metrics are reported as percentages. Commercial model results follow the Motto paper table, with Gemini-2.5-Pro updated from the provided category scores.
+            </p>
+        </div>
+    </section>
+
+    <!-- Abstract -->
+    <section class="section abstract-section">
+        <div class="container">
+            <h2 class="section-title">Abstract</h2>
+            <div class="abstract-content">
+                <p>
+                    Multimodal Large Language Models have made great progress in grounding tasks, yet existing methods still struggle to unify precise localization and complex reasoning. PR-Bench is a new referring expression comprehension benchmark designed to explicitly evaluate the perception-reasoning gap.
+                </p>
+                <p>
+                    PR-Bench contains <strong>6,000 high-resolution query-box pairs</strong> across six mutually exclusive subcategories: <span class="highlight">Attribute</span>, <span class="highlight">Position</span>, <span class="highlight">Interaction</span>, <span class="highlight">Relation</span>, <span class="highlight">Commonsense</span>, and <span class="highlight">Rejection</span>. The benchmark separates visual-cue perception from compositional reasoning and exposes where models fail under dense objects, small regions, semantic relations, and absent references.
+                </p>
+                <p>
+                    Built from FineHARD images and a human-verified annotation pipeline, PR-Bench serves as a formal diagnostic leaderboard for REC systems. Motto establishes a strong baseline by using spatially-grounded thought tokens and a context-adaptive Scan-Focus-Action grounding chain.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benchmark Design & Examples -->
+    <section class="section highlight-section" id="benchmark-design">
+        <div class="container">
+            <h2 class="section-title">Benchmark Design</h2>
+            <div class="design-examples-grid">
+                <div class="design-category-grid">
+                    <div class="challenge-grid">
+                        <div class="challenge-item"><strong>Attribute</strong><p>Fine-grained intrinsic cues such as color, texture, material, shape, and state.</p><small>Visual-cue perception</small></div>
+                        <div class="challenge-item"><strong>Position</strong><p>Relative placement to heterogeneous anchor objects in the scene.</p><small>Visual-cue perception</small></div>
+                        <div class="challenge-item"><strong>Interaction</strong><p>Ordinal and relative arrangement among homogeneous object groups.</p><small>Visual-cue perception</small></div>
+                    </div>
+                    <div class="challenge-grid">
+                        <div class="challenge-item"><strong>Relation</strong><p>Comparative relationships over multiple grounded entities.</p><small>Compositional reasoning</small></div>
+                        <div class="challenge-item"><strong>Commonsense</strong><p>Functional, contextual, or affordance-based target descriptions.</p><small>Compositional reasoning</small></div>
+                        <div class="challenge-item"><strong>Rejection</strong><p>Invalid expressions whose conditions do not match any object.</p><small>No-target reasoning</small></div>
+                    </div>
+                </div>
+                <div class="benchmark-example-figure image-container">
+                    <img src="./png/prbench_examples.png" alt="Examples of PR-Bench benchmark">
+                    <p class="caption"><strong>Examples of the six PR-Bench subcategories.</strong> The left side focuses on perception, while the right side requires stronger reasoning and rejection behavior.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Construction Pipeline -->
+    <section class="section" id="construction">
+        <div class="container">
+            <h2 class="section-title">Construction Pipeline</h2>
+            <div class="image-container">
+                <img src="./png/prbench_pipeline.png" alt="PR-Bench construction pipeline">
+            </div>
+            <div class="pipeline-summary">
+                <div class="pipeline-note"><strong>1. Image filtering</strong><span>FineHARD images are filtered by resolution range, detected-box distribution, and scene richness.</span></div>
+                <div class="pipeline-note"><strong>2. Structured parsing</strong><span>Qwen2.5-VL-72B decomposes each scene into object categories, attributes, relations, and short descriptions.</span></div>
+                <div class="pipeline-note"><strong>3. Region grounding</strong><span>Grounding DINO grounds the parsed descriptions, while images with too few categories or objects are discarded.</span></div>
+                <div class="pipeline-note"><strong>4. Region correction</strong><span>Each candidate box is converted into a checklist and retained only when all object properties are visually consistent.</span></div>
+                <div class="pipeline-note"><strong>5. Task-aware expression generation</strong><span>Rule-based selection assigns seed objects to six subcategories, then Qwen2.5-VL-72B rewrites task-specific expressions.</span></div>
+                <div class="pipeline-note"><strong>6. Final verification</strong><span>Consistency, uniqueness, and multi-round expert review remove hallucinated, ambiguous, or imprecise query-box pairs.</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dataset Statistics -->
+    <section class="section highlight-section">
+        <div class="container">
+            <h2 class="section-title">Dataset Statistics</h2>
+            <div class="two-column">
+                <div class="column">
+                    <div class="stats-grid">
+                        <div class="stat-item"><div class="stat-number">6,000</div><div class="stat-label">query-box pairs</div></div>
+                        <div class="stat-item"><div class="stat-number">3,102</div><div class="stat-label">source images</div></div>
+                        <div class="stat-item"><div class="stat-number">1,000</div><div class="stat-label">phrases per subcategory</div></div>
+                        <div class="stat-item"><div class="stat-number">12.4</div><div class="stat-label">average phrase length</div></div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="table-wrapper">
+                        <table class="results-table">
+                            <thead><tr><th>Type</th><th>Images</th><th>Phrases</th><th>Box Size</th><th>Length</th></tr></thead>
+                            <tbody>
+                                <tr><td>Attribute</td><td>701</td><td>1,000</td><td>10.76%</td><td>9.3</td></tr>
+                                <tr><td>Position</td><td>735</td><td>1,000</td><td>8.34%</td><td>11.0</td></tr>
+                                <tr><td>Interaction</td><td>642</td><td>1,000</td><td>9.43%</td><td>10.3</td></tr>
+                                <tr><td>Relation</td><td>695</td><td>1,000</td><td>6.15%</td><td>14.4</td></tr>
+                                <tr><td>Commonsense</td><td>715</td><td>1,000</td><td>6.14%</td><td>15.5</td></tr>
+                                <tr><td>Rejection</td><td>764</td><td>1,000</td><td>N/A</td><td>13.8</td></tr>
+                                <tr class="top-model"><td>Total</td><td>3,102</td><td>6,000</td><td>8.16%</td><td>12.4</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Analysis -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Analysis</h2>
+            <div class="key-findings">
+                <div class="finding-item"><div class="finding-icon">1</div><div class="finding-text"><strong>Overall capability gap</strong><p>Models drop substantially on PR-Bench: none exceeds 72% Acc<sub>p</sub>, and Acc<sub>RC</sub> is 6.02% lower than Acc<sub>API</sub> on average.</p></div></div>
+                <div class="finding-item"><div class="finding-icon">2</div><div class="finding-text"><strong>Perceptual difficulty drivers</strong><p>Same-category distractors, smaller target area, and longer object-hop chains reduce accuracy by 20.77%, 25.64%, and 10.88% on average.</p></div></div>
+                <div class="finding-item"><div class="finding-icon">3</div><div class="finding-text"><strong>Reasoning and hallucination</strong><p>Thinking mode improves Relation and Commonsense, while rejection remains vulnerable to localization hallucination under dense visual references.</p></div></div>
+            </div>
+            <div class="analysis-grid">
+                <div class="analysis-item">
+                    <h3>Benchmark Difficulty Profile</h3>
+                    <div class="analysis-figure-grid">
+                        <img src="./png/bbox_compare.png" alt="Target object area ratio comparison">
+                        <img src="./png/semantic_density_compare.png" alt="Expression length and semantic density comparison">
+                    </div>
+                    <p>PR-Bench emphasizes small or marginally visible targets and dense, discriminative visual cues. Compared with existing REC benchmarks, its long expressions are designed to carry useful grounding evidence rather than context-irrelevant description.</p>
+                </div>
+                <div class="analysis-item">
+                    <h3>Perceptual-Aware Evaluation</h3>
+                    <div class="difficulty-legend"><img src="./png/difficulty_legend.png" alt="Model legend for perceptual difficulty analysis"></div>
+                    <div class="difficulty-figure-grid">
+                        <img src="./png/difficulty_distractors.png" alt="Accuracy by same-category distractors">
+                        <img src="./png/difficulty_bbox.png" alt="Accuracy by target object area ratio">
+                        <img src="./png/difficulty_hops.png" alt="Accuracy by object hops">
+                    </div>
+                    <p>Performance decreases as scenes become visually harder: more same-category distractors, smaller boxes, and additional reference hops all degrade grounding. In the hardest bins, only Qwen3-VL-8B remains above 60% accuracy in the paper analysis.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Citation -->
+    <section class="section citation-section" id="citation">
+        <div class="container">
+            <h2 class="section-title">Citation</h2>
+            <div class="citation-box">
+                <pre><code></code></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2026 PR-Bench Team. Project page: <a href="./">PR-Bench</a>.</p>
+        </div>
+    </footer>
+
+    <script src="./assets/script.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

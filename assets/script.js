@@ -1,32 +1,4 @@
-﻿(function () {
-    function getLeaderboard(type) {
-        return document.getElementById(type + "-leaderboard");
-    }
-
-    function setActiveButton(type) {
-        var buttons = document.querySelectorAll(".leaderboard-tabs .tab-button");
-        buttons.forEach(function (button) {
-            var isActive = button.getAttribute("onclick") && button.getAttribute("onclick").indexOf("'" + type + "'") !== -1;
-            button.classList.toggle("active", isActive);
-        });
-    }
-
-    window.showLeaderboard = function (type) {
-        var openSource = getLeaderboard("opensource");
-        var commercial = getLeaderboard("commercial");
-
-        if (!openSource || !commercial) return;
-
-        openSource.classList.remove("active");
-        commercial.classList.remove("active");
-
-        var selected = getLeaderboard(type);
-        if (selected) {
-            selected.classList.add("active");
-            setActiveButton(type);
-        }
-    };
-
+(function () {
     function cellValue(row, index) {
         var text = row.children[index] ? row.children[index].textContent.trim() : "";
         var normalized = text.replace(/,/g, "").replace(/^--$/, "");
@@ -85,6 +57,4 @@
             });
         });
     });
-
-    window.showLeaderboard("opensource");
 })();

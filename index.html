@@ -27,7 +27,7 @@
                     <sup>2</sup>Xingchen AGI Lab, China Telecom Artificial Intelligence Technology (Beijing) Co., Ltd<br>
                     <sup>3</sup>University of Science and Technology Beijing &nbsp;&nbsp; <sup>4</sup>Beijing University of Posts and Telecommunications &nbsp;&nbsp; <sup>5</sup>Shanghai Jiao Tong University
                 </p>
-                <p class="footnote"><sup>&dagger;</sup>Equal contributions. &nbsp;&nbsp; <sup>◊</sup>Work done during internship at TeleAI. &nbsp;&nbsp; <sup>*</sup>Corresponding authors.</p>
+                <p class="footnote"><sup>&dagger;</sup>Equal contributions. &nbsp;&nbsp; <sup>◊</sup>Work done during internship at China Telecom Artificial Intelligence Technology (Beijing) Co., Ltd. &nbsp;&nbsp; <sup>*</sup>Corresponding authors.</p>
             </div>
             <div class="links">
                 <a href="https://arxiv.org/" class="button" target="_blank" rel="noopener">Paper</a>
@@ -49,8 +49,16 @@
             <h2 class="section-title">Leaderboard</h2>
             <div class="leaderboard-intro">
                 <p>
-                    <strong>PR-Bench</strong> evaluates referring expression comprehension across six diagnostic subcategories. <strong>mAcc</strong> is averaged over five non-rejection categories, <strong>mAcc<sub>API</sub></strong> covers Attribute, Position, and Interaction, and <strong>mAcc<sub>RC</sub></strong> covers Relation and Commonsense. Rejection is reported separately as no-target accuracy.
+                    <strong>PR-Bench</strong> evaluates referring expression comprehension across six diagnostic subcategories, separating visual-cue perception from compositional reasoning.
                 </p>
+                <div class="category-summary" aria-label="PR-Bench subcategory definitions">
+                    <span><strong>Attribute</strong>: intrinsic visual properties such as color, texture, material, shape, or state.</span>
+                    <span><strong>Position</strong>: spatial placement relative to other objects in the scene.</span>
+                    <span><strong>Interaction</strong>: relative ordering or arrangement among same-category objects.</span>
+                    <span><strong>Relation</strong>: comparative relationships involving multiple grounded entities.</span>
+                    <span><strong>Commonsense</strong>: contextual or functional descriptions without explicit object naming.</span>
+                    <span><strong>Rejection</strong>: expressions whose conditions match no valid target.</span>
+                </div>
             </div>
 
 
@@ -63,7 +71,18 @@
                                 <tr>
                                     <th>Rank</th>
                                     <th>Model</th>
-                                    <th>Group</th>
+                                    <th class="group-filter-cell">
+                                        <span>Group</span>
+                                        <button class="group-filter-toggle size-filter-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Filter by model group"><span class="filter-icon" aria-hidden="true"></span></button>
+                                        <div class="group-filter-menu size-filter-menu" role="menu" aria-label="Filter by model group">
+                                            <label><input type="checkbox" value="generalist"> Generalist</label>
+                                            <label><input type="checkbox" value="specialist"> Specialist</label>
+                                            <div class="size-filter-actions">
+                                                <button class="group-filter-reset size-filter-reset" type="button">Reset</button>
+                                                <button class="group-filter-apply size-filter-apply" type="button">Apply</button>
+                                            </div>
+                                        </div>
+                                    </th>
                                     <th class="size-filter-cell">
                                         <span>Size</span>
                                         <button class="size-filter-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Filter by parameter size"><span class="filter-icon" aria-hidden="true"></span></button>
@@ -111,10 +130,13 @@
                     </div>
                 </div>
             </div>
-
-            <p class="caption" style="margin-top: 20px; text-align: center;">
-                Metrics are reported as percentages.
-            </p>
+            <div class="metric-note" aria-label="Metric definitions">
+                <span><strong>Attr.</strong> = Attribute; <strong>Pos.</strong> = Position; <strong>Inter.</strong> = Interaction; <strong>Rel.</strong> = Relation; <strong>Common.</strong> = Commonsense; <strong>Rej.</strong> = Rejection.</span>
+                <span><strong>mAcc</strong>: mean over Attr., Pos., Inter., Rel., and Common., averaged across IoU thresholds from 0.5 to 0.9 (step 0.05).</span>
+                <span><strong>mAcc<sub>API</sub></strong>: mean over Attr., Pos., and Inter.</span>
+                <span><strong>mAcc<sub>RC</sub></strong>: mean over Rel. and Common.</span>
+                <span><strong>Rej.</strong>: no-target accuracy for rejection queries.</span>
+            </div>
         </div>
     </section>
 

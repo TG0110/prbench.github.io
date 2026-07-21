@@ -164,16 +164,28 @@
             <h2 class="section-title">Benchmark Design</h2>
             <div class="design-examples-grid">
                 <div class="design-category-grid">
-                    <div class="challenge-grid">
-                        <div class="challenge-item"><strong>Attribute</strong><p>Fine-grained intrinsic cues such as color, texture, material, shape, and state.</p><small>Visual-cue perception</small></div>
-                        <div class="challenge-item"><strong>Position</strong><p>Relative placement to heterogeneous anchor objects in the scene.</p><small>Visual-cue perception</small></div>
-                        <div class="challenge-item"><strong>Interaction</strong><p>Ordinal and relative arrangement among homogeneous object groups.</p><small>Visual-cue perception</small></div>
-                    </div>
-                    <div class="challenge-grid">
-                        <div class="challenge-item"><strong>Relation</strong><p>Comparative relationships over multiple grounded entities.</p><small>Compositional reasoning</small></div>
-                        <div class="challenge-item"><strong>Commonsense</strong><p>Functional, contextual, or affordance-based target descriptions.</p><small>Compositional reasoning</small></div>
-                        <div class="challenge-item"><strong>Rejection</strong><p>Invalid expressions whose conditions do not match any object.</p><small>No-target reasoning</small></div>
-                    </div>
+                    <section class="design-dimension" aria-label="Visual-cue Perception subcategories">
+                        <div class="dimension-header">
+                            <h3>Visual-cue Perception</h3>
+                            <p>Evaluates whether a model can localize targets from directly observable visual evidence, including intrinsic object properties, spatial placement, and arrangements among objects.</p>
+                        </div>
+                        <div class="challenge-grid">
+                            <div class="challenge-item"><strong>Attribute</strong><p>Focuses on intrinsic and directly observable properties such as color, texture, material, shape, and state. Target identification depends on distinguishing fine-grained visual cues from same-category distractors.</p></div>
+                            <div class="challenge-item"><strong>Position</strong><p>Captures spatial relationships between different objects. The target must be localized according to its relative placement with respect to heterogeneous anchor objects in the scene.</p></div>
+                            <div class="challenge-item"><strong>Interaction</strong><p>Focuses on spatial arrangement and relative ordering among objects of the same category, typically requiring ordinal or relative positioning within a homogeneous group.</p></div>
+                        </div>
+                    </section>
+                    <section class="design-dimension" aria-label="Compositional Reasoning subcategories">
+                        <div class="dimension-header">
+                            <h3>Compositional Reasoning</h3>
+                            <p>Evaluates more complex referring expressions that require multi-object comparison, contextual or functional inference, or reliable rejection when no object satisfies the query.</p>
+                        </div>
+                        <div class="challenge-grid">
+                            <div class="challenge-item"><strong>Relation</strong><p>Identifies targets through comparative relationships with distinct anchor objects, using shared or contrasting visual attributes. The model must ground multiple entities before making the comparison.</p></div>
+                            <div class="challenge-item"><strong>Commonsense</strong><p>Identifies targets through contextual or functional descriptions rather than explicit visual attributes. The expression may refer to an object by its use, purpose, or scene context.</p></div>
+                            <div class="challenge-item"><strong>Rejection</strong><p>Focuses on negation and non-existent references. These expressions contain one or more conditions that do not match any object in the image, so the correct behavior is to reject the query.</p></div>
+                        </div>
+                    </section>
                 </div>
                 <div class="benchmark-example-figure image-container">
                     <img src="./png/prbench_examples.png" alt="Examples of PR-Bench benchmark">

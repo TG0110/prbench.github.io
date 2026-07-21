@@ -202,13 +202,14 @@
             <div class="image-container">
                 <img src="./png/prbench_pipeline.png" alt="PR-Bench construction pipeline">
             </div>
+            <p class="pipeline-intro">
+                PR-Bench is built from FineHARD images. Following the paper, images are filtered by resolution range and the distribution of Grounding DINO-detected boxes to prioritize scenes with diverse objects and rich visual content; the automated annotation pipeline is followed by multi-round expert verification.
+            </p>
             <div class="pipeline-summary">
-                <div class="pipeline-note"><strong>1. Image filtering</strong><span>FineHARD images are filtered by resolution range, detected-box distribution, and scene richness.</span></div>
-                <div class="pipeline-note"><strong>2. Structured parsing</strong><span>Qwen2.5-VL-72B decomposes each scene into object categories, attributes, relations, and short descriptions.</span></div>
-                <div class="pipeline-note"><strong>3. Region grounding</strong><span>Grounding DINO grounds the parsed descriptions, while images with too few categories or objects are discarded.</span></div>
-                <div class="pipeline-note"><strong>4. Region correction</strong><span>Each candidate box is converted into a checklist and retained only when all object properties are visually consistent.</span></div>
-                <div class="pipeline-note"><strong>5. Task-aware expression generation</strong><span>Rule-based selection assigns seed objects to six subcategories, then Qwen2.5-VL-72B rewrites task-specific expressions.</span></div>
-                <div class="pipeline-note"><strong>6. Final verification</strong><span>Consistency, uniqueness, and multi-round expert review remove hallucinated, ambiguous, or imprecise query-box pairs.</span></div>
+                <div class="pipeline-note"><strong>Image parsing and region generation</strong><span>Qwen2.5-VL-72B decomposes each image into an object-centric property dictionary, including category, inherent attributes, interactive relationships, and a description phrase. Grounding DINO then grounds the description phrases into candidate boxes.</span></div>
+                <div class="pipeline-note"><strong>Region correction</strong><span>Each candidate region is converted into a verification checklist. Qwen2.5-VL-72B checks whether the visual content inside the target region matches all listed properties, and only fully consistent objects are retained.</span></div>
+                <div class="pipeline-note"><strong>Referring expression generation</strong><span>A human-defined rule-based selection function assigns retained objects to task types by specific visual conditions, curating challenging task-relevant seeds before Qwen2.5-VL-72B generates task-specific referring expressions.</span></div>
+                <div class="pipeline-note"><strong>Referring expression correction</strong><span>Candidate expressions are validated through consistency and uniqueness checks, then ten expert annotators perform multi-round review to correct localization inaccuracies and refine linguistic ambiguities.</span></div>
             </div>
         </div>
     </section>

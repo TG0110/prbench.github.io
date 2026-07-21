@@ -1,6 +1,8 @@
 (function () {
     var sizeColumnIndex = 3;
+    var groupColumnIndex = 2;
     var activeSizeFilters = [];
+    var activeGroupFilters = [];
 
     function cellValue(row, index) {
         var text = row.children[index] ? row.children[index].textContent.trim() : "";
@@ -13,10 +15,12 @@
     function parseModelSize(row) {
         var text = row.children[sizeColumnIndex] ? row.children[sizeColumnIndex].textContent.trim() : "";
         if (text === "" || text === "--" || /^n\/?a$/i.test(text)) return null;
-
         var match = text.replace(/,/g, "").match(/([0-9]+(?:\.[0-9]+)?)/);
-        if (!match) return null;
-        return parseFloat(match[1]);
+        return match ? parseFloat(match[1]) : null;
+    }
+
+    function rowGroup(row) {
+        return row.children[groupColumnIndex] ? row.children[groupColumnIndex].textContent.trim().toLowerCase() : "";
     }
 
     function matchesSizeRange(size, range) {
@@ -30,40 +34,39 @@
         return true;
     }
 
-    function applySizeFilters() {
+    function applyTableFilters() {
         document.querySelectorAll(".leaderboard-table tbody tr").forEach(function (row) {
             var size = parseModelSize(row);
-            var isVisible = activeSizeFilters.length === 0 || activeSizeFilters.some(function (range) {
+            var group = rowGroup(row);
+            var sizeVisible = activeSizeFilters.length === 0 || activeSizeFilters.some(function (range) {
                 return matchesSizeRange(size, range);
             });
-            row.hidden = !isVisible;
+            var groupVisible = activeGroupFilters.length === 0 || activeGroupFilters.indexOf(group) !== -1;
+            row.hidden = !(sizeVisible && groupVisible);
         });
-
         document.querySelectorAll(".size-filter-cell").forEach(function (cell) {
             cell.classList.toggle("has-active-filter", activeSizeFilters.length > 0);
+        });
+        document.querySelectorAll(".group-filter-cell").forEach(function (cell) {
+            cell.classList.toggle("has-active-filter", activeGroupFilters.length > 0);
         });
     }
 
     function sortTable(table, columnIndex, direction) {
         var tbody = table.tBodies[0];
         if (!tbody) return;
-
         var rows = Array.prototype.slice.call(tbody.rows);
         rows.sort(function (a, b) {
             var av = cellValue(a, columnIndex);
             var bv = cellValue(b, columnIndex);
-
             if (typeof av === "number" && typeof bv !== "number") return direction === "asc" ? -1 : 1;
             if (typeof av !== "number" && typeof bv === "number") return direction === "asc" ? 1 : -1;
             if (av < bv) return direction === "asc" ? -1 : 1;
             if (av > bv) return direction === "asc" ? 1 : -1;
             return 0;
         });
-
-        rows.forEach(function (row) {
-            tbody.appendChild(row);
-        });
-        applySizeFilters();
+        rows.forEach(function (row) { tbody.appendChild(row); });
+        applyTableFilters();
     }
 
     document.querySelectorAll(".leaderboard-table").forEach(function (table) {
@@ -81,14 +84,24 @@
         });
     });
 
-    document.querySelectorAll(".size-filter-cell").forEach(function (cell) {
-        var toggle = cell.querySelector(".size-filter-toggle");
-        var menu = cell.querySelector(".size-filter-menu");
-        var applyButton = cell.querySelector(".size-filter-apply");
-        var resetButton = cell.querySelector(".size-filter-reset");
+    function setupFilterCell(options) {
+        var cell = document.querySelector(options.cellSelector);
+        if (!cell) return;
+        var toggle = cell.querySelector(options.toggleSelector);
+        var menu = cell.querySelector(options.menuSelector);
+        var applyButton = cell.querySelector(options.applySelector);
+        var resetButton = cell.querySelector(options.resetSelector);
         var checkboxes = Array.prototype.slice.call(cell.querySelectorAll('input[type="checkbox"]'));
-
         if (!toggle || !menu || !applyButton || !resetButton) return;
+
+        function updateMenuPosition() {
+            var rect = toggle.getBoundingClientRect();
+            var menuWidth = menu.offsetWidth || 150;
+            var left = rect.left + rect.width / 2;
+            left = Math.max(12 + menuWidth / 2, Math.min(window.innerWidth - 12 - menuWidth / 2, left));
+            menu.style.top = Math.round(rect.bottom + 8) + "px";
+            menu.style.left = Math.round(left) + "px";
+        }
 
         function closeMenu() {
             cell.classList.remove("is-open");
@@ -98,61 +111,60 @@
         toggle.addEventListener("click", function (event) {
             event.stopPropagation();
             var willOpen = !cell.classList.contains("is-open");
-            document.querySelectorAll(".size-filter-cell.is-open").forEach(function (openCell) {
+            document.querySelectorAll(".size-filter-cell.is-open, .group-filter-cell.is-open").forEach(function (openCell) {
                 openCell.classList.remove("is-open");
-                var openToggle = openCell.querySelector(".size-filter-toggle");
+                var openToggle = openCell.querySelector("button");
                 if (openToggle) openToggle.setAttribute("aria-expanded", "false");
             });
             cell.classList.toggle("is-open", willOpen);
             toggle.setAttribute("aria-expanded", willOpen ? "true" : "false");
+            if (willOpen) updateMenuPosition();
         });
 
-        menu.addEventListener("click", function (event) {
-            event.stopPropagation();
+        window.addEventListener("resize", function () {
+            if (cell.classList.contains("is-open")) updateMenuPosition();
         });
-
+        document.addEventListener("scroll", function () {
+            if (cell.classList.contains("is-open")) updateMenuPosition();
+        }, true);
+        menu.addEventListener("click", function (event) { event.stopPropagation(); });
         applyButton.addEventListener("click", function (event) {
             event.stopPropagation();
-            activeSizeFilters = checkboxes.filter(function (checkbox) {
-                return checkbox.checked;
-            }).map(function (checkbox) {
-                return checkbox.value;
-            });
-            applySizeFilters();
+            options.setActive(checkboxes.filter(function (checkbox) { return checkbox.checked; }).map(function (checkbox) { return checkbox.value; }));
+            applyTableFilters();
             closeMenu();
         });
-
         resetButton.addEventListener("click", function (event) {
             event.stopPropagation();
-            checkboxes.forEach(function (checkbox) {
-                checkbox.checked = false;
-            });
-            activeSizeFilters = [];
-            applySizeFilters();
+            checkboxes.forEach(function (checkbox) { checkbox.checked = false; });
+            options.setActive([]);
+            applyTableFilters();
             closeMenu();
         });
+    }
+
+    setupFilterCell({
+        cellSelector: ".group-filter-cell",
+        toggleSelector: ".group-filter-toggle",
+        menuSelector: ".group-filter-menu",
+        applySelector: ".group-filter-apply",
+        resetSelector: ".group-filter-reset",
+        setActive: function (values) { activeGroupFilters = values; }
+    });
+    setupFilterCell({
+        cellSelector: ".size-filter-cell",
+        toggleSelector: ".size-filter-toggle",
+        menuSelector: ".size-filter-menu",
+        applySelector: ".size-filter-apply",
+        resetSelector: ".size-filter-reset",
+        setActive: function (values) { activeSizeFilters = values; }
     });
 
     document.addEventListener("click", function () {
-        document.querySelectorAll(".size-filter-cell.is-open").forEach(function (cell) {
+        document.querySelectorAll(".size-filter-cell.is-open, .group-filter-cell.is-open").forEach(function (cell) {
             cell.classList.remove("is-open");
-            var toggle = cell.querySelector(".size-filter-toggle");
+            var toggle = cell.querySelector("button");
             if (toggle) toggle.setAttribute("aria-expanded", "false");
-        });
-    });
-
-    document.querySelectorAll("[data-copy-target]").forEach(function (button) {
-        button.addEventListener("click", function () {
-            var target = document.getElementById(button.dataset.copyTarget);
-            if (!target || !navigator.clipboard) return;
-
-            navigator.clipboard.writeText(target.innerText).then(function () {
-                var original = button.textContent;
-                button.textContent = "Copied";
-                window.setTimeout(function () {
-                    button.textContent = original;
-                }, 1400);
-            });
         });
     });
 })();

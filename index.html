@@ -27,7 +27,7 @@
                     <sup>2</sup>Xingchen AGI Lab, China Telecom Artificial Intelligence Technology (Beijing) Co., Ltd<br>
                     <sup>3</sup>University of Science and Technology Beijing &nbsp;&nbsp; <sup>4</sup>Beijing University of Posts and Telecommunications &nbsp;&nbsp; <sup>5</sup>Shanghai Jiao Tong University
                 </p>
-                <p class="footnote"><sup>◊</sup>Work done during internship at China Telecom Artificial Intelligence Technology Co., Ltd. &nbsp;&nbsp; <sup>&dagger;</sup>Equal contributions. &nbsp;&nbsp; <sup>*</sup>Corresponding authors.</p>
+                <p class="footnote"><sup>&dagger;</sup>Equal contributions. &nbsp;&nbsp; <sup>◊</sup>Work done during internship at TeleAI. &nbsp;&nbsp; <sup>*</sup>Corresponding authors.</p>
             </div>
             <div class="links">
                 <a href="https://arxiv.org/" class="button" target="_blank" rel="noopener">Paper</a>
@@ -64,7 +64,22 @@
                                     <th>Rank</th>
                                     <th>Model</th>
                                     <th>Group</th>
-                                    <th>Size</th>
+                                    <th class="size-filter-cell">
+                                        <span>Size</span>
+                                        <button class="size-filter-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Filter by parameter size"><span class="filter-icon" aria-hidden="true"></span></button>
+                                        <div class="size-filter-menu" role="menu" aria-label="Filter by parameter size">
+                                            <label><input type="checkbox" value="lt4"> &lt; 4B</label>
+                                            <label><input type="checkbox" value="4-10"> 4B - 10B</label>
+                                            <label><input type="checkbox" value="10-20"> 10B - 20B</label>
+                                            <label><input type="checkbox" value="20-40"> 20B - 40B</label>
+                                            <label><input type="checkbox" value="gte40"> &gt;= 40B</label>
+                                            <label><input type="checkbox" value="na"> N/A</label>
+                                            <div class="size-filter-actions">
+                                                <button class="size-filter-reset" type="button">Reset</button>
+                                                <button class="size-filter-apply" type="button">Apply</button>
+                                            </div>
+                                        </div>
+                                    </th>
                                     <th>mAcc</th>
                                     <th>mAcc<sub>API</sub></th>
                                     <th>mAcc<sub>RC</sub></th>

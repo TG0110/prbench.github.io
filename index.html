@@ -158,9 +158,18 @@
                             <p>Evaluates whether a model can localize targets from directly observable visual evidence, including intrinsic object properties, spatial placement, and arrangements among objects.</p>
                         </div>
                         <div class="challenge-grid">
-                            <div class="challenge-item"><strong>Attribute</strong><p>Focuses on intrinsic and directly observable properties such as color, texture, material, shape, and state. Target identification depends on distinguishing fine-grained visual cues from same-category distractors.</p></div>
-                            <div class="challenge-item"><strong>Position</strong><p>Captures spatial relationships between different objects. The target must be localized according to its relative placement with respect to heterogeneous anchor objects in the scene.</p></div>
-                            <div class="challenge-item"><strong>Interaction</strong><p>Focuses on spatial arrangement and relative ordering among objects of the same category, typically requiring ordinal or relative positioning within a homogeneous group.</p></div>
+                            <div class="challenge-item">
+                                <div class="challenge-copy"><strong>Attribute</strong><p>Focuses on intrinsic and directly observable properties such as color, texture, material, shape, and state. Target identification depends on distinguishing fine-grained visual cues from same-category distractors.</p></div>
+                                <img src="./png/prbench_attribute.png" alt="Attribute examples from PR-Bench" loading="lazy">
+                            </div>
+                            <div class="challenge-item">
+                                <div class="challenge-copy"><strong>Position</strong><p>Captures spatial relationships between different objects. The target must be localized according to its relative placement with respect to heterogeneous anchor objects in the scene.</p></div>
+                                <img src="./png/prbench_position.png" alt="Position examples from PR-Bench" loading="lazy">
+                            </div>
+                            <div class="challenge-item">
+                                <div class="challenge-copy"><strong>Interaction</strong><p>Focuses on spatial arrangement and relative ordering among objects of the same category, typically requiring ordinal or relative positioning within a homogeneous group.</p></div>
+                                <img src="./png/prbench_interaction.png" alt="Interaction examples from PR-Bench" loading="lazy">
+                            </div>
                         </div>
                     </section>
                     <section class="design-dimension" aria-label="Compositional Reasoning subcategories">
@@ -169,15 +178,20 @@
                             <p>Evaluates more complex referring expressions that require multi-object comparison, contextual or functional inference, or reliable rejection when no object satisfies the query.</p>
                         </div>
                         <div class="challenge-grid">
-                            <div class="challenge-item"><strong>Relation</strong><p>Identifies targets through comparative relationships with distinct anchor objects, using shared or contrasting visual attributes. The model must ground multiple entities before making the comparison.</p></div>
-                            <div class="challenge-item"><strong>Commonsense</strong><p>Identifies targets through contextual or functional descriptions rather than explicit visual attributes. The expression may refer to an object by its use, purpose, or scene context.</p></div>
-                            <div class="challenge-item"><strong>Rejection</strong><p>Focuses on negation and non-existent references. These expressions contain one or more conditions that do not match any object in the image, so the correct behavior is to reject the query.</p></div>
+                            <div class="challenge-item">
+                                <div class="challenge-copy"><strong>Relation</strong><p>Identifies targets through comparative relationships with distinct anchor objects, using shared or contrasting visual attributes. The model must ground multiple entities before making the comparison.</p></div>
+                                <img src="./png/prbench_relation.png" alt="Relation examples from PR-Bench" loading="lazy">
+                            </div>
+                            <div class="challenge-item">
+                                <div class="challenge-copy"><strong>Commonsense</strong><p>Identifies targets through contextual or functional descriptions rather than explicit visual attributes. The expression may refer to an object by its use, purpose, or scene context.</p></div>
+                                <img src="./png/prbench_commonsense.png" alt="Commonsense examples from PR-Bench" loading="lazy">
+                            </div>
+                            <div class="challenge-item">
+                                <div class="challenge-copy"><strong>Rejection</strong><p>Focuses on negation and non-existent references. These expressions contain one or more conditions that do not match any object in the image, so the correct behavior is to reject the query.</p></div>
+                                <img src="./png/prbench_rejection.png" alt="Rejection examples from PR-Bench" loading="lazy">
+                            </div>
                         </div>
                     </section>
-                </div>
-                <div class="benchmark-example-figure image-container">
-                    <img src="./png/prbench_examples.png" alt="Examples of PR-Bench benchmark">
-                    <p class="caption"><strong>Examples of the six PR-Bench subcategories.</strong> The left side focuses on perception, while the right side requires stronger reasoning and rejection behavior.</p>
                 </div>
             </div>
         </div>

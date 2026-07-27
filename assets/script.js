@@ -25,6 +25,31 @@
         return false;
     }
 
+    function updateVisibleRanks(table) {
+        var visibleRank = 0;
+        var medalClasses = ["rank-gold", "rank-silver", "rank-bronze"];
+
+        table.querySelectorAll("tbody tr").forEach(function (row) {
+            row.classList.remove("rank-1", "rank-2", "rank-3");
+            if (row.hidden || row.style.display === "none") return;
+
+            visibleRank += 1;
+            var rankCell = row.cells[0];
+            if (!rankCell) return;
+            rankCell.textContent = "";
+
+            if (visibleRank <= 3) {
+                var rankIcon = document.createElement("span");
+                rankIcon.className = "rank-icon " + medalClasses[visibleRank - 1];
+                rankIcon.textContent = visibleRank;
+                rankCell.appendChild(rankIcon);
+                row.classList.add("rank-" + visibleRank);
+            } else {
+                rankCell.textContent = visibleRank;
+            }
+        });
+    }
+
     function applyTableFilters(table, filterState) {
         table.querySelectorAll("tbody tr").forEach(function (row) {
             var size = parseModelSize(row, filterState.sizeColumnIndex);
@@ -37,6 +62,7 @@
 
         var filterCell = table.querySelector(".size-filter-cell");
         if (filterCell) filterCell.classList.toggle("has-active-filter", filterState.activeSizeFilters.length > 0);
+        updateVisibleRanks(table);
     }
 
     function sortTable(table, columnIndex, direction, filterState) {
@@ -149,6 +175,7 @@
             resetSelector: ".size-filter-reset",
             filterState: filterState
         });
+        updateVisibleRanks(table);
     });
 
     document.addEventListener("click", function () {

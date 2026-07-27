@@ -1,7 +1,4 @@
 (function () {
-    var sizeColumnIndex = 2;
-    var activeSizeFilters = [];
-
     function cellValue(row, index) {
         var text = row.children[index] ? row.children[index].textContent.trim() : "";
         var normalized = text.replace(/,/g, "").replace(/^--$/, "");
@@ -10,13 +7,12 @@
         return text.toLowerCase();
     }
 
-    function parseModelSize(row) {
+    function parseModelSize(row, sizeColumnIndex) {
         var text = row.children[sizeColumnIndex] ? row.children[sizeColumnIndex].textContent.trim() : "";
         if (text === "" || text === "--" || /^n\/?a$/i.test(text)) return null;
         var match = text.replace(/,/g, "").match(/([0-9]+(?:\.[0-9]+)?)/);
         return match ? parseFloat(match[1]) : null;
     }
-
 
     function matchesSizeRange(size, range) {
         if (range === "na") return size === null;
@@ -26,23 +22,24 @@
         if (range === "10-20") return size >= 10 && size < 20;
         if (range === "20-40") return size >= 20 && size < 40;
         if (range === "gte40") return size >= 40;
-        return true;
+        return false;
     }
 
-    function applyTableFilters() {
-        document.querySelectorAll(".leaderboard-table tbody tr").forEach(function (row) {
-            var size = parseModelSize(row);
-            var sizeVisible = activeSizeFilters.length === 0 || activeSizeFilters.some(function (range) {
+    function applyTableFilters(table, filterState) {
+        table.querySelectorAll("tbody tr").forEach(function (row) {
+            var size = parseModelSize(row, filterState.sizeColumnIndex);
+            var isVisible = filterState.activeSizeFilters.length === 0 || filterState.activeSizeFilters.some(function (range) {
                 return matchesSizeRange(size, range);
             });
-            row.hidden = !sizeVisible;
+            row.hidden = !isVisible;
+            row.style.display = isVisible ? "" : "none";
         });
-        document.querySelectorAll(".size-filter-cell").forEach(function (cell) {
-            cell.classList.toggle("has-active-filter", activeSizeFilters.length > 0);
-        });
+
+        var filterCell = table.querySelector(".size-filter-cell");
+        if (filterCell) filterCell.classList.toggle("has-active-filter", filterState.activeSizeFilters.length > 0);
     }
 
-    function sortTable(table, columnIndex, direction) {
+    function sortTable(table, columnIndex, direction, filterState) {
         var tbody = table.tBodies[0];
         if (!tbody) return;
         var rows = Array.prototype.slice.call(tbody.rows);
@@ -56,26 +53,11 @@
             return 0;
         });
         rows.forEach(function (row) { tbody.appendChild(row); });
-        applyTableFilters();
+        applyTableFilters(table, filterState);
     }
 
-    document.querySelectorAll(".leaderboard-table").forEach(function (table) {
-        table.querySelectorAll("thead th").forEach(function (th, index) {
-            th.addEventListener("click", function () {
-                var current = th.dataset.direction === "asc" ? "desc" : "asc";
-                table.querySelectorAll("thead th").forEach(function (other) {
-                    other.removeAttribute("data-direction");
-                    other.classList.remove("active-sort");
-                });
-                th.dataset.direction = current;
-                th.classList.add("active-sort");
-                sortTable(table, index, current);
-            });
-        });
-    });
-
     function setupFilterCell(options) {
-        var cell = document.querySelector(options.cellSelector);
+        var cell = options.cell;
         if (!cell) return;
         var toggle = cell.querySelector(options.toggleSelector);
         var menu = cell.querySelector(options.menuSelector);
@@ -120,26 +102,53 @@
         menu.addEventListener("click", function (event) { event.stopPropagation(); });
         applyButton.addEventListener("click", function (event) {
             event.stopPropagation();
-            options.setActive(checkboxes.filter(function (checkbox) { return checkbox.checked; }).map(function (checkbox) { return checkbox.value; }));
-            applyTableFilters();
+            options.filterState.activeSizeFilters = checkboxes.filter(function (checkbox) {
+                return checkbox.checked;
+            }).map(function (checkbox) {
+                return checkbox.value;
+            });
+            applyTableFilters(options.table, options.filterState);
             closeMenu();
         });
         resetButton.addEventListener("click", function (event) {
             event.stopPropagation();
             checkboxes.forEach(function (checkbox) { checkbox.checked = false; });
-            options.setActive([]);
-            applyTableFilters();
+            options.filterState.activeSizeFilters = [];
+            applyTableFilters(options.table, options.filterState);
             closeMenu();
         });
     }
 
-    setupFilterCell({
-        cellSelector: ".size-filter-cell",
-        toggleSelector: ".size-filter-toggle",
-        menuSelector: ".size-filter-menu",
-        applySelector: ".size-filter-apply",
-        resetSelector: ".size-filter-reset",
-        setActive: function (values) { activeSizeFilters = values; }
+    document.querySelectorAll(".leaderboard-table").forEach(function (table) {
+        var sizeFilterCell = table.querySelector(".size-filter-cell");
+        var filterState = {
+            sizeColumnIndex: sizeFilterCell ? sizeFilterCell.cellIndex : 2,
+            activeSizeFilters: []
+        };
+
+        table.querySelectorAll("thead th").forEach(function (th, index) {
+            th.addEventListener("click", function (event) {
+                if (event.target.closest("button, input, label, .size-filter-menu")) return;
+                var current = th.dataset.direction === "asc" ? "desc" : "asc";
+                table.querySelectorAll("thead th").forEach(function (other) {
+                    other.removeAttribute("data-direction");
+                    other.classList.remove("active-sort");
+                });
+                th.dataset.direction = current;
+                th.classList.add("active-sort");
+                sortTable(table, index, current, filterState);
+            });
+        });
+
+        setupFilterCell({
+            table: table,
+            cell: sizeFilterCell,
+            toggleSelector: ".size-filter-toggle",
+            menuSelector: ".size-filter-menu",
+            applySelector: ".size-filter-apply",
+            resetSelector: ".size-filter-reset",
+            filterState: filterState
+        });
     });
 
     document.addEventListener("click", function () {

@@ -1,8 +1,6 @@
 (function () {
-    var sizeColumnIndex = 3;
-    var groupColumnIndex = 2;
+    var sizeColumnIndex = 2;
     var activeSizeFilters = [];
-    var activeGroupFilters = [];
 
     function cellValue(row, index) {
         var text = row.children[index] ? row.children[index].textContent.trim() : "";
@@ -19,9 +17,6 @@
         return match ? parseFloat(match[1]) : null;
     }
 
-    function rowGroup(row) {
-        return row.children[groupColumnIndex] ? row.children[groupColumnIndex].textContent.trim().toLowerCase() : "";
-    }
 
     function matchesSizeRange(size, range) {
         if (range === "na") return size === null;
@@ -37,18 +32,13 @@
     function applyTableFilters() {
         document.querySelectorAll(".leaderboard-table tbody tr").forEach(function (row) {
             var size = parseModelSize(row);
-            var group = rowGroup(row);
             var sizeVisible = activeSizeFilters.length === 0 || activeSizeFilters.some(function (range) {
                 return matchesSizeRange(size, range);
             });
-            var groupVisible = activeGroupFilters.length === 0 || activeGroupFilters.indexOf(group) !== -1;
-            row.hidden = !(sizeVisible && groupVisible);
+            row.hidden = !sizeVisible;
         });
         document.querySelectorAll(".size-filter-cell").forEach(function (cell) {
             cell.classList.toggle("has-active-filter", activeSizeFilters.length > 0);
-        });
-        document.querySelectorAll(".group-filter-cell").forEach(function (cell) {
-            cell.classList.toggle("has-active-filter", activeGroupFilters.length > 0);
         });
     }
 
@@ -143,14 +133,6 @@
         });
     }
 
-    setupFilterCell({
-        cellSelector: ".group-filter-cell",
-        toggleSelector: ".group-filter-toggle",
-        menuSelector: ".group-filter-menu",
-        applySelector: ".group-filter-apply",
-        resetSelector: ".group-filter-reset",
-        setActive: function (values) { activeGroupFilters = values; }
-    });
     setupFilterCell({
         cellSelector: ".size-filter-cell",
         toggleSelector: ".size-filter-toggle",

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PR-Bench: Perception-Reasoning Benchmark for Referring Expression Comprehension</title>
-    <meta name="description" content="PR-Bench evaluates visual-cue perception and compositional reasoning in referring expression comprehension.">
+    <title>Mixture-of-Thought-Tokens: Unifying Perception and Reasoning for Free-form Multimodal Grounding</title>
+    <meta name="description" content="Mixture-of-Thought-Tokens (Motto) unifies precise perception and complex reasoning for free-form multimodal grounding.">
     <link rel="stylesheet" href="./assets/style.css">
 </head>
 <body>
@@ -14,13 +14,13 @@
 
             <div class="brand-title">
                 <img class="brand-logo" src="./assets/prbench-logo.png" alt="" aria-hidden="true">
-                <h1 class="title">PR-Bench</h1>
+                <h1 class="title">Mixture-of-Thought-Tokens</h1>
             </div>
-            <!-- <h2 class="subtitle">Perception-Reasoning Benchmark for Referring Expression Comprehension</h2> -->
+            <h2 class="subtitle">Unifying Perception and Reasoning for Free-form Multimodal Grounding</h2>
 
             <div class="authors">
                 <p>
-                    Tianyi Gao<sup>1,2,&dagger;,◊</sup>, Han Fang<sup>2,&dagger;</sup>, Tianyi Ding<sup>2,4</sup>, Hao Li<sup>2,5</sup>, Xin Wei<sup>2</sup>, Hongbo Sun<sup>2</sup>, Xiaodong Dong<sup>2</sup>, Ye Yuan<sup>2</sup>, Jinglin Xu<sup>3</sup>, Kongming Liang<sup>4</sup>, Hao Sun<sup>2,*</sup>, Jingmin Xin<sup>1,*</sup>
+                    Tianyi Gao<sup>1,2,&dagger;,&loz;</sup>, Han Fang<sup>2,&dagger;</sup>, Tianyi Ding<sup>2,4</sup>, Hao Li<sup>2,5</sup>, Xin Wei<sup>2</sup>, Hongbo Sun<sup>2</sup>, Xiaodong Dong<sup>2</sup>, Ye Yuan<sup>2</sup>, Jinglin Xu<sup>3</sup>, Kongming Liang<sup>4</sup>, Hao Sun<sup>2,*</sup>, Jingmin Xin<sup>1,*</sup>
                 </p>
             </div>
 
@@ -30,11 +30,11 @@
                     <sup>2</sup>Xingchen AGI Lab, China Telecom Artificial Intelligence Technology (Beijing) Co., Ltd<br>
                     <sup>3</sup>University of Science and Technology Beijing &nbsp;&nbsp; <sup>4</sup>Beijing University of Posts and Telecommunications &nbsp;&nbsp; <sup>5</sup>Shanghai Jiao Tong University
                 </p>
-                <p class="footnote"><sup>&dagger;</sup>Equal contributions. &nbsp;&nbsp; <sup>◊</sup>Work done during internship at China Telecom Artificial Intelligence Technology (Beijing) Co., Ltd. &nbsp;&nbsp; <sup>*</sup>Corresponding authors.</p>
+                <p class="footnote"><sup>&dagger;</sup>Equal contributions. &nbsp;&nbsp; <sup>&loz;</sup>Work done during internship at China Telecom Artificial Intelligence Technology (Beijing) Co., Ltd. &nbsp;&nbsp; <sup>*</sup>Corresponding authors.</p>
             </div>
             <div class="links">
-                <a href="https://arxiv.org/" class="button" target="_blank" rel="noopener">Paper</a>
-                <a href="https://github.com/TG0110/prbench.github.io" class="button" target="_blank" rel="noopener">GitHub</a>
+                <a href="https://arxiv.org/abs/2607.24407" class="button" target="_blank" rel="noopener">Paper</a>
+                <a href="https://github.com/TG0110/PR-Bench" class="button" target="_blank" rel="noopener">GitHub</a>
                 <a href="#leaderboard" class="button">Leaderboard</a>
                 <a href="#benchmark-design" class="button">Benchmark Design</a>
             </div>
@@ -139,13 +139,13 @@
             <h2 class="section-title">Abstract</h2>
             <div class="abstract-content">
                 <p>
-                    Multimodal Large Language Models have made great progress in grounding tasks, yet existing methods still struggle to unify precise localization and complex reasoning. PR-Bench is a new referring expression comprehension benchmark designed to explicitly evaluate the perception-reasoning gap.
+                    Multimodal Large Language Models have made great progress in grounding tasks, yet existing methods still struggle to unify precise localization and complex reasoning. Text-based methods rely on coordinates or index prediction, limiting perceptual capabilities for dense visual objects, while latent token-based methods lack inherent spatial references and thinking steps.
                 </p>
                 <p>
-                    PR-Bench contains <strong>6,000 high-resolution query-box pairs</strong> across six mutually exclusive subcategories: <span class="highlight">Attribute</span>, <span class="highlight">Position</span>, <span class="highlight">Interaction</span>, <span class="highlight">Relation</span>, <span class="highlight">Commonsense</span>, and <span class="highlight">Rejection</span>. The benchmark separates visual-cue perception from compositional reasoning and exposes where models fail under dense objects, small regions, semantic relations, and absent references.
+                    To address this, we propose <strong>Mixture-of-Thought-Tokens (Motto)</strong>, a new free-form multimodal grounding method that bridges the perception-reasoning gap. Spatially-Grounded Thought Tokenization explicitly aligns special tokens with spatial locations, while a Context-Adaptive Chain-of-Tokens dynamically switches grounding modes within an interleaved reasoning chain.
                 </p>
                 <p>
-                    Built from FineHARD images and a human-verified annotation pipeline, PR-Bench serves as a formal diagnostic leaderboard for REC systems.
+                    We also construct <strong>PR-Bench</strong>, a new referring expression comprehension benchmark for evaluating the perception-reasoning gap. Extensive experiments demonstrate that Motto achieves state-of-the-art performance across diverse free-form grounding tasks.
                 </p>
             </div>
         </div>
@@ -291,7 +291,12 @@
         <div class="container">
             <h2 class="section-title">Citation</h2>
             <div class="citation-box">
-                <pre><code></code></pre>
+                <pre><code>@article{gao2026mixture,
+  title={Mixture-of-Thought-Tokens: Unifying Perception and Reasoning for Free-form Multimodal Grounding},
+  author={Gao, Tianyi and Fang, Han and Ding, Tianyi and Li, Hao and Wei, Xin and Sun, Hongbo and Dong, Xiaodong and Yuan, Ye and Xu, Jinglin and Liang, Kongming and Sun, Hao and Xin, Jingmin},
+  journal={arXiv preprint arXiv:2607.24407},
+  year={2026}
+}</code></pre>
             </div>
         </div>
     </section>
@@ -299,7 +304,7 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>© 2026 PR-Bench Team. Project page: <a href="./">PR-Bench</a>.</p>
+            <p>&copy; 2026 Motto and PR-Bench Team. Project page: <a href="./">PR-Bench</a>.</p>
         </div>
     </footer>
 

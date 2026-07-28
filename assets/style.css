@@ -67,12 +67,22 @@ a {
     letter-spacing: 0.05em;
 }
 
+.paper-title {
+    max-width: 1040px;
+    margin: 0 auto 26px;
+    color: rgba(255, 255, 255, 0.99);
+    font-size: clamp(1.35rem, 2.6vw, 2rem);
+    font-weight: 400;
+    line-height: 1.28;
+    text-wrap: balance;
+}
+
 .brand-title {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: clamp(10px, 1.7vw, 22px);
-    margin: 0 0 15px;
+    margin: 0;
 }
 
 .brand-logo {
@@ -89,15 +99,6 @@ a {
     line-height: 1;
     letter-spacing: 0;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.20);
-}
-
-.subtitle {
-    max-width: 940px;
-    margin: 0 auto 28px;
-    color: rgba(255, 255, 255, 0.95);
-    font-size: clamp(1.18rem, 2.4vw, 1.55rem);
-    font-weight: 430;
-    line-height: 1.35;
 }
 
 .authors {
